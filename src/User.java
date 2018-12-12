@@ -1,2 +1,53 @@
-public class User implements Client {
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+public class User extends Thread{
+    private Date birthday;
+    private String email, creditCard;
+    private long uid;
+
+
+    public User() {
+        var gc = GregorianCalendar.getInstance();
+        gc.set(Calendar.YEAR, RandGen.randInt(1900, 2015));
+        gc.set(Calendar.DAY_OF_YEAR, RandGen.randInt(1, gc.getActualMaximum(Calendar.DAY_OF_YEAR)));
+        birthday = gc.getTime();
+
+        email = Integer.toString(RandGen.randInt(888888, 9999999), 35) + "@gmail.com";
+        creditCard = Integer.toString(RandGen.randInt(0, 9999)) + (RandGen.randInt(0, 9999)) + (RandGen.randInt(0, 9999)) + (RandGen.randInt(0, 9999)) + (RandGen.randInt(0, 9999));
+        uid = RandGen.randLong(0, Long.MAX_VALUE);
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCreditCard() {
+        return creditCard;
+    }
+
+    public void setCreditCard(String creditCard) {
+        this.creditCard = creditCard;
+    }
+
+    public long getUid() {
+        return uid;
+    }
+
+    public void setUid(long uid) {
+        this.uid = uid;
+    }
 }

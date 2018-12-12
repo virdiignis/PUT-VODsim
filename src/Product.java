@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Product {
     public enum Genre {
-        Sensacion, Comedy, Drama, Kids, Documental, Action;
+        Sensation, Comedy, Drama, Kids, Documental, Action
     }
     BufferedImage image;
     String name, desc;
@@ -13,5 +13,4 @@ public class Product {
     ArrayList<String> productionPlaces;
     Provider provider;
     float price;
-
 }
