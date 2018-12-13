@@ -1,7 +1,17 @@
 class RandGen {
     static int randInt(int start, int end) {
-        return start + (int)Math.round(Math.random() * (end - start));
+        return start + (int) Math.round(Math.random() * (end - start));
     }
-    static long randLong(long start, long end) { return start + Math.round(Math.random() * (end - start)); }
-    static boolean randBool(){return Math.random() > 0.5;}
+
+    static long randLong(long start, long end) {
+        return start + Math.round(Math.random() * (end - start));
+    }
+
+    static boolean randBool() {
+        return Math.random() > 0.5;
+    }
+
+    static float randFloat(float start, float end) {
+        return start + (float) Math.random() * (end - start);
+    }
 }

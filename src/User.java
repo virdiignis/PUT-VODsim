@@ -2,10 +2,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+
+/**
+ * Class modeling enduser of VOD system, each user has it's own thread and generates requests for VOD materials.
+ */
 public class User extends Thread{
     private Date birthday;
     private String email, creditCard;
     private long uid;
+    Abonament abonament;
 
 
     public User() {
