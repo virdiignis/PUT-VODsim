@@ -8,7 +8,8 @@ public class ControlPanelDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JPanel imagexd;
-    private JTextArea textArea1;
+    private JTextPane textPane1;
+    private JTextPane textPane2;
 
     public ControlPanelDialog() {
         setContentPane(contentPane);
@@ -22,20 +23,22 @@ public class ControlPanelDialog extends JDialog {
     }
 
     private void onOK() {
-//        imagexd.removeAll();
+        imagexd.removeAll();
         try {
 //            Product a = new Product(new Provider(), 3);
 //            textArea1.setText(a.name);
-//            ImageIcon icon=new ImageIcon(a.image);
-//            //JFrame frame=new JFrame();
-//            imagexd.setLayout(new FlowLayout());
-//            imagexd.setSize(200,200);
-//            JLabel lbl=new JLabel();
-//            lbl.setIcon(icon);
-//            imagexd.add(lbl);
-//            imagexd.setVisible(true);
-            int id = RandGen.randMovieId();
-            textArea1.setText(Integer.toString(id));
+
+            Movie m = new Movie(new Provider(), 3);
+            textPane1.setText(m.name);
+            textPane2.setText(m.desc);
+            ImageIcon icon=new ImageIcon(m.image);
+            //JFrame frame=new JFrame();
+            imagexd.setLayout(new FlowLayout());
+            imagexd.setSize(600,900);
+            JLabel lbl=new JLabel();
+            lbl.setIcon(icon);
+            imagexd.add(lbl);
+            imagexd.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
