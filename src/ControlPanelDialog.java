@@ -1,10 +1,14 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class ControlPanelDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
+    private JPanel imagexd;
+    private JTextArea textArea1;
 
     public ControlPanelDialog() {
         setContentPane(contentPane);
@@ -18,8 +22,21 @@ public class ControlPanelDialog extends JDialog {
     }
 
     private void onOK() {
-        System.out.println(Integer.toString(randInt(888888, 9999999), 35) + "@gmail.com");
-        System.out.println(Integer.toString(randInt(0, 9999)) + (randInt(0, 9999)) + (randInt(0, 9999)) + randInt(0, 9999));
+        imagexd.removeAll();
+        try {
+            Product a = new Product(new Provider(), 3);
+            textArea1.setText(a.name);
+            ImageIcon icon=new ImageIcon(a.image);
+            //JFrame frame=new JFrame();
+            imagexd.setLayout(new FlowLayout());
+            imagexd.setSize(200,200);
+            JLabel lbl=new JLabel();
+            lbl.setIcon(icon);
+            imagexd.add(lbl);
+            imagexd.setVisible(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //dispose();
     }
 

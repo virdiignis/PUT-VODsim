@@ -1,37 +1,50 @@
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Random;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 public class Product {
+
     public enum Genre {
         Sensation, Comedy, Drama, Kids, Documental, Action
     }
+
     Genre genre;
     BufferedImage image;
     String name, desc;
     Date productionDate;
     int duration, grade;
-    ArrayList<String> productionPlaces;
+    Set<String> productionPlaces;
     Provider provider;
     float price;
 
-    public Product(Provider provider, float price) {
+    public Product(){}
+
+    public Product(Provider provider, float price) throws IOException {
         this.provider = provider;
         this.price = price;
-        int productionPlacesNo = RandGen.randInt(1, 13);
-        FileReader countries;
-        try {
-            countries = new FileReader("countries.txt");
-        } catch (FileNotFoundException e){
-            System.out.println("Countries list file not found!");
-            System.exit(1);
+        productionPlaces = new HashSet<>();
+        for (int i = 0; i < RandGen.randInt(Constants.MIN_PRODUCTION_PLACES, Constants.MAX_PRODUCTION_PLACES); i++) {
+            productionPlaces.add(RandGen.randWord("/home/prance/IdeaProjects/PUT-VODsim/src/Constants.java"));
         }
-        for (int i=0; i<productionPlacesNo;++i){
-            countries.
+        grade = RandGen.randInt(0, 100);
+        productionDate = RandGen.randDate();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < Constants.TITLES_LENGTH; i++) {
+            stringBuilder.append(String.format("%s ", RandGen.randWord("/home/prance/IdeaProjects/PUT-VODsim/src/words_alpha.txt")));
         }
+        name = stringBuilder.toString();
+        stringBuilder = new StringBuilder();
+        for (int i = 0; i < Constants.DESC_LENGTH; i++) {
+            stringBuilder.append(String.format("%s ", RandGen.randWord("/home/prance/IdeaProjects/PUT-VODsim/src/words_alpha.txt")));
+        }
+        desc = stringBuilder.toString();
+        image = ImageIO.read(new URL("https://picsum.photos/200/200/?random"));
+        genre = Genre.values()[RandGen.randInt(0, 5)];
+
     }
 }

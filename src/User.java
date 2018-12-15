@@ -14,11 +14,7 @@ public class User extends Thread{
 
 
     public User() {
-        var gc = GregorianCalendar.getInstance();
-        gc.set(Calendar.YEAR, RandGen.randInt(1900, 2015));
-        gc.set(Calendar.DAY_OF_YEAR, RandGen.randInt(1, gc.getActualMaximum(Calendar.DAY_OF_YEAR)));
-        birthday = gc.getTime();
-
+        birthday = RandGen.randDate();
         email = Integer.toString(RandGen.randInt(888888, 9999999), 35) + "@gmail.com";
         creditCard = Integer.toString(RandGen.randInt(0, 9999)) + (RandGen.randInt(0, 9999)) + (RandGen.randInt(0, 9999)) + (RandGen.randInt(0, 9999)) + (RandGen.randInt(0, 9999));
         uid = RandGen.randLong(0, Long.MAX_VALUE);
