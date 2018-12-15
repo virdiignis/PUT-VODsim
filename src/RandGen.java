@@ -1,6 +1,6 @@
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -42,6 +42,20 @@ class RandGen {
             return ret;
         } catch (IOException e){
             System.out.println(filename + "cannot be opened or read.");
+            return "";
+        }
+    }
+
+    static String randQuote() {
+        try (InputStream is = new URL("https://ron-swanson-quotes.herokuapp.com/v2/quotes").openStream()) {
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            StringBuilder b = new StringBuilder();
+            b.append(rd.readLine());
+            b.delete(0, 2);
+            b.delete(b.length() - 2, b.length());
+            return b.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
             return "";
         }
     }

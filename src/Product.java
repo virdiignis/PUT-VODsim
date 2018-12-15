@@ -22,8 +22,6 @@ public class Product {
     Provider provider;
     float price;
 
-    public Product(){}
-
     public Product(Provider provider, float price) throws IOException {
         this.provider = provider;
         this.price = price;
@@ -38,11 +36,7 @@ public class Product {
             stringBuilder.append(String.format("%s ", RandGen.randWord("/home/prance/IdeaProjects/PUT-VODsim/src/words_alpha.txt")));
         }
         name = stringBuilder.toString();
-        stringBuilder = new StringBuilder();
-        for (int i = 0; i < Constants.DESC_LENGTH; i++) {
-            stringBuilder.append(String.format("%s ", RandGen.randWord("/home/prance/IdeaProjects/PUT-VODsim/src/words_alpha.txt")));
-        }
-        desc = stringBuilder.toString();
+        desc = RandGen.randQuote();
         image = ImageIO.read(new URL("https://picsum.photos/200/200/?random"));
         genre = Genre.values()[RandGen.randInt(0, 5)];
 
