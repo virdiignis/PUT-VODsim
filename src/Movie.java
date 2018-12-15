@@ -9,6 +9,7 @@ public class Movie extends Product {
     public Movie(Provider provider, float price) throws IOException {
         super(provider, price);
         rentTime = RandGen.randInt(duration, 10000);
+        for (int i = 0; i < RandGen.randInt(1, 5); i++) actors.add(RandGen.randName());
 
     }
 }

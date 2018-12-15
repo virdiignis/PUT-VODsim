@@ -59,4 +59,20 @@ class RandGen {
             return "";
         }
     }
+
+    static String randName() {
+        try (InputStream is = new URL("http://randomprofile.com/api/api.php?countries=GBR&format=csv").openStream()) {
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            StringBuilder b = new StringBuilder();
+            rd.readLine();
+            String[] vals = rd.readLine().split(",");
+            b.append(vals[1]);
+            b.append(" ");
+            b.append(vals[2]);
+            return b.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
 }
