@@ -22,19 +22,21 @@ public class ControlPanelDialog extends JDialog {
     }
 
     private void onOK() {
-        imagexd.removeAll();
+//        imagexd.removeAll();
         try {
-            Product a = new Product(new Provider(), 3);
-            textArea1.setText(a.name);
-            ImageIcon icon=new ImageIcon(a.image);
-            //JFrame frame=new JFrame();
-            imagexd.setLayout(new FlowLayout());
-            imagexd.setSize(200,200);
-            JLabel lbl=new JLabel();
-            lbl.setIcon(icon);
-            imagexd.add(lbl);
-            imagexd.setVisible(true);
-        } catch (IOException e) {
+//            Product a = new Product(new Provider(), 3);
+//            textArea1.setText(a.name);
+//            ImageIcon icon=new ImageIcon(a.image);
+//            //JFrame frame=new JFrame();
+//            imagexd.setLayout(new FlowLayout());
+//            imagexd.setSize(200,200);
+//            JLabel lbl=new JLabel();
+//            lbl.setIcon(icon);
+//            imagexd.add(lbl);
+//            imagexd.setVisible(true);
+            int id = RandGen.randMovieId();
+            textArea1.setText(Integer.toString(id));
+        } catch (Exception e) {
             e.printStackTrace();
         }
         //dispose();

@@ -1,5 +1,12 @@
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.*;
+import java.net.ConnectException;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,15 +39,15 @@ class RandGen {
         return gc.getTime();
     }
 
-    static String randWord(String filename){
-        try{
+    static String randWord(String filename) {
+        try {
             RandomAccessFile file = new RandomAccessFile(filename, "r");
             file.seek(randLong(0, file.length()));
             file.readLine();
             String ret = file.readLine();
             file.close();
             return ret;
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(filename + "cannot be opened or read.");
             return "";
         }
@@ -73,6 +80,27 @@ class RandGen {
         } catch (IOException e) {
             e.printStackTrace();
             return "";
+        }
+    }
+
+    static int randMovieId(){
+        try {
+            URL url = new URL(String.format("https://api.themoviedb.org/3/discover/movie/?api_key=%s&vote_count.gte=10&page=%d", Constants.API_KEY, randInt(1, 1000)));
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.connect();
+            if(con.getResponseCode() == 301) {
+                url = new URL(con.getHeaderField("Location"));
+                con = (HttpURLConnection) url.openConnection();
+                con.connect();
+            }
+            if (con.getResponseCode() != 200) throw new ConnectException("Cannot download API contents.");
+            InputStream is = con.getInputStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            JsonObject jsonObject = new JsonParser().parse(rd.readLine()).getAsJsonObject();
+            return jsonObject.get("results").getAsJsonArray().get(rand.nextInt(19)).getAsJsonObject().get("id").getAsInt();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return 293660; //returns Deadpool on error. Seems like a good choice to make.
         }
     }
 }
