@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.HashSet;
 
 public class Movie extends Product {
-    public enum Genre {
+    private enum Genre {
         Action,
         Adventure,
         Animation,
@@ -28,12 +28,12 @@ public class Movie extends Product {
         Western
     }
 
-    HashSet<String> actors, trailers;
-    HashSet<Genre> genres;
-    int rentTime;
-    Promotion promotion;
+    private HashSet<String> actors, trailers;
+    private HashSet<Genre> genres;
+    private int rentTime;
+    private Promotion promotion;
 
-    public Movie(Provider provider, float price) throws IOException {
+    Movie(Provider provider, float price) {
         super(provider, price);
         rentTime = RandGen.randInt(runtime, 10000);
         id = RandGen.randMovieId();
@@ -99,5 +99,13 @@ public class Movie extends Product {
         }
     }
 
+    @Override
+    float getPromotionPrice() {
+        if (promotion != null) return price*(1-promotion.calculatePrice(this));
+        return price;
+    }
 
+    public void setPromotion(Promotion promotion) {
+        this.promotion = promotion;
+    }
 }

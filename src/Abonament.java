@@ -1,5 +1,5 @@
-public class Abonament {
-    public enum Version {
+class Abonament {
+    enum Version {
         BASIC(10, 1, 1920, 1080),
         FAMILY(30, 3, 1920, 1080),
         PREMIUM(50, 3, 4096, 2160);
@@ -16,5 +16,21 @@ public class Abonament {
             this.resX = resX;
             this.resY = resY;
         }
+    }
+
+    private Version version;
+
+    Abonament(int ver) {
+        if(ver == 0){
+            version = Version.BASIC;
+        } else if (ver == 1){
+            version = Version.FAMILY;
+        } else {
+            version = Version.PREMIUM;
+        }
+    }
+
+    Version getVersion() {
+        return version;
     }
 }

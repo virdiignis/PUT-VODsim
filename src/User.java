@@ -1,54 +1,50 @@
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.concurrent.Semaphore;
 
 
 /**
  * Class modeling enduser of VOD system, each user has it's own thread and generates requests for VOD materials.
  */
-public class User extends Thread{
+public class User extends Thread {
     private Date birthday;
     private String email, creditCard;
     private long uid;
-    Abonament abonament;
+    private Abonament abonament;
+    private float debt;
+    Semaphore debtSemaphore;
+    private LinkedList<Product> avaliableProducts;
 
-
-    public User() {
+    User(LinkedList<Product> avaliableProducts) {
+        debtSemaphore = new Semaphore(1);
+        this.avaliableProducts = avaliableProducts;
+        debt = 0;
         birthday = RandGen.randDate();
-        email = Integer.toString(RandGen.randInt(888888, 9999999), 35) + "@gmail.com";
-        creditCard = Integer.toString(RandGen.randInt(0, 9999)) + (RandGen.randInt(0, 9999)) + (RandGen.randInt(0, 9999)) + (RandGen.randInt(0, 9999)) + (RandGen.randInt(0, 9999));
+        email = String.format("%s@gmail.com", RandGen.randName().replaceAll("\\s", "."));
+        creditCard = String.format("%d %d %d %d %d", RandGen.randInt(0, 9999), RandGen.randInt(0, 9999), RandGen.randInt(0, 9999), RandGen.randInt(0, 9999), RandGen.randInt(0, 9999));
         uid = RandGen.randLong(0, Long.MAX_VALUE);
+        if (RandGen.randBool()) {
+            int abo = RandGen.randInt(0, 2);
+            abonament = new Abonament(abo);
+        }
     }
 
-    public Date getBirthday() {
-        return birthday;
+    synchronized float pay() {
+        if (abonament != null) return abonament.getVersion().price;
+        float tmp = 0;
+        try {
+            debtSemaphore.acquire();
+            tmp = debt;
+            debt = 0;
+            debtSemaphore.release();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return tmp;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
+    @Override
+    public void run() {
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getCreditCard() {
-        return creditCard;
-    }
-
-    public void setCreditCard(String creditCard) {
-        this.creditCard = creditCard;
-    }
-
-    public long getUid() {
-        return uid;
-    }
-
-    public void setUid(long uid) {
-        this.uid = uid;
     }
 }

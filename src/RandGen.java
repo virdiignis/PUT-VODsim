@@ -9,7 +9,7 @@ import java.util.GregorianCalendar;
 import java.util.Random;
 
 class RandGen {
-    static final Random rand = new Random();
+    private static final Random rand = new Random();
 
     static int randInt(int start, int end) {
         return start + rand.nextInt(end);
@@ -79,16 +79,16 @@ class RandGen {
     }
 
     static int randMovieId(){
-        return randProductId("movie");
+        return randProductId("movie", 1000);
     }
 
     static int randSeriesId(){
-        return randProductId("tv");
+        return randProductId("tv", 164);
     }
 
-    private static int randProductId(String type) {
+    private static int randProductId(String type, int maxPages) {
         try {
-            JsonObject jsonObject = NetIO.getJsonFromURL(String.format("https://api.themoviedb.org/3/discover/%s/?api_key=%s&vote_count.gte=10&sort_by=popularity.desc&page=%d", type, Constants.API_KEY, randInt(1, 1000)));
+            JsonObject jsonObject = NetIO.getJsonFromURL(String.format("https://api.themoviedb.org/3/discover/%s/?api_key=%s&vote_count.gte=10&sort_by=popularity.desc&page=%d", type, Constants.API_KEY, randInt(1, maxPages)));
             return jsonObject.get("results").getAsJsonArray().get(rand.nextInt(19)).getAsJsonObject().get("id").getAsInt();
         } catch (IOException e) {
             e.printStackTrace();

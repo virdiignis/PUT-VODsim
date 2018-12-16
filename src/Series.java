@@ -15,6 +15,7 @@ public class Series extends Product {
         Crime,
         Documentary,
         Drama,
+        Fantasy,
         Family,
         Kids,
         Mystery,
@@ -51,7 +52,7 @@ public class Series extends Product {
     HashSet<String> actors;
     HashSet<Genre> genres;
 
-    public Series(Provider provider, float price) throws IOException {
+    public Series(Provider provider, float price) {
         super(provider, price);
         id = RandGen.randSeriesId();
         SeriesFromTMDB();
@@ -70,6 +71,12 @@ public class Series extends Product {
         name = jsonObject.get("name").getAsString();
         desc = jsonObject.get("overview").getAsString();
         grade = jsonObject.get("vote_average").getAsFloat();
+        int runtime = 0;
+        try{
+            runtime = jsonObject.get("episode_run_time").getAsJsonArray().get(0).getAsInt();
+        }catch (IndexOutOfBoundsException e){
+            System.err.println("Episode runtime not present.");
+        }
 
         genres = new HashSet<>();
         for (var gen : jsonObject.get("genres").getAsJsonArray())
@@ -80,6 +87,16 @@ public class Series extends Product {
         } catch (ParseException e) {
             System.err.println("Cannot parse date.");
             e.printStackTrace();
+        }
+
+        try {
+            seasons = new ArrayList<>();
+            for (var season : jsonObject.get("seasons").getAsJsonArray()) {
+                var jseason = season.getAsJsonObject();
+                seasons.add(new Season(jseason.get("name").getAsString(), jseason.get("season_number").getAsInt()));
+            }
+        }catch (NullPointerException e){
+            System.err.println("Cannot download seasons data. Not necessarily an error.");
         }
 
         try {
@@ -101,24 +118,20 @@ public class Series extends Product {
             System.err.println("Couldn't retrieve credits data. Not necessarily an error, because it could be unavailable.");
         }
 
-        seasons = new ArrayList<>();
-        for (var season : jsonObject.get("seasons").getAsJsonArray()) {
-            var jseason = season.getAsJsonObject();
-            seasons.add(new Season(jseason.get("name").getAsString(), jseason.get("season_number").getAsInt()));
-        }
-
         for (var season : seasons) {
             try {
                 jsonObject = NetIO.getJsonFromURL(String.format("https://api.themoviedb.org/3/tv/%d/season/%d?api_key=%s", id, season.number, Constants.API_KEY));
                 for (var episode : jsonObject.get("episodes").getAsJsonArray()) {
                     var jepisode = episode.getAsJsonObject();
                     Date d = format.parse(jepisode.get("air_date").getAsString());
-
+                    season.add(new Episode(d, runtime));
                 }
             } catch (IOException e) {
                 System.err.println("Couldn't retrieve season data. Not necessarily an error, because it could be unavailable.");
             } catch (ParseException e){
                 System.err.println("Invalid date format in episode date.");
+            } catch (UnsupportedOperationException e){
+                System.err.println("Air date not present in episode json.");
             }
         }
     }

@@ -28,7 +28,7 @@ public class ControlPanelDialog extends JDialog {
 //            Product a = new Product(new Provider(), 3);
 //            textArea1.setText(a.name);
 
-            Movie m = new Movie(new Provider(), 3);
+            Product m = new Live(new Provider(), 3);
             textPane1.setText(m.name);
             textPane2.setText(m.desc);
             ImageIcon icon=new ImageIcon(m.image);
