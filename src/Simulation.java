@@ -9,6 +9,7 @@ public class Simulation extends Thread {
     private LinkedList<Product> products;
     private AtomicBoolean pause;
     private float account;
+    private long simTime;
 
     public Simulation() {
         providers = new LinkedList<>();
@@ -24,7 +25,7 @@ public class Simulation extends Thread {
 
     @Override
     public void run() {
-        long simTime=0;
+        simTime=0;
         while (!pause.get()) {
             if (RandGen.randBool()) for (int i = 0; i < RandGen.randInt(1, providers.size()); i++)
                 users.add(new User(products));
@@ -33,11 +34,15 @@ public class Simulation extends Thread {
                 for (var provider : providers) account -= provider.bill();
             }
             if (RandGen.randInt(0, 60) == 0) {
-                var p = new Promotion();
+                var p = new Promotion(simTime);
                 promotions.add(p);
                 for (var product: products)
                     if (RandGen.randBool()) product.setPromotion(p);
             }
+            LinkedList<Promotion> remove = new LinkedList<>();
+            for (var promotion : promotions) if(promotion.getEnd().getTime() <= simTime) remove.add(promotion);
+            for (var promotion : remove) promotions.remove(promotion);
+
             try {
                 sleep(1000);
             } catch (InterruptedException e) {

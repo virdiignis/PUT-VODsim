@@ -16,6 +16,16 @@ public class Promotion {
         discount = RandGen.randInt(5, 50);
     }
 
+    public Promotion(long start) {
+        this.start = new Date(start);
+        end = new Date(start + RandGen.randLong(10, 300));
+        discount = RandGen.randInt(5, 50);
+    }
+
+    public Date getEnd() {
+        return end;
+    }
+
     float calculatePrice(Product p){
         Date now = new Date();
         if (start.before(now) && end.after(now)) return p.getBasePrice() * (1 - (float) discount / (float) 100);
