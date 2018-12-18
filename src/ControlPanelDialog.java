@@ -10,6 +10,7 @@ public class ControlPanelDialog extends JDialog {
     private JPanel imagexd;
     private JTextPane textPane1;
     private JTextPane textPane2;
+    Simulation s;
 
     public ControlPanelDialog() {
         setContentPane(contentPane);
@@ -17,32 +18,38 @@ public class ControlPanelDialog extends JDialog {
         getRootPane().setDefaultButton(buttonOK);
 
         buttonOK.addActionListener(e -> onOK());
+        s = new Simulation();
+        s.start();
     }
     private static int randInt(int start, int end) {
         return start + (int)Math.round(Math.random() * (end - start));
     }
 
     private void onOK() {
-        imagexd.removeAll();
-        try {
-//            Product a = new Product(new Provider(), 3);
-//            textArea1.setText(a.name);
-
-            Product m = new Live(new Provider(), 3);
-            textPane1.setText(m.name);
-            textPane2.setText(m.desc);
-            ImageIcon icon=new ImageIcon(m.image);
-            //JFrame frame=new JFrame();
-            imagexd.setLayout(new FlowLayout());
-            imagexd.setSize(600,900);
-            JLabel lbl=new JLabel();
-            lbl.setIcon(icon);
-            imagexd.add(lbl);
-            imagexd.setVisible(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        imagexd.removeAll();
+//        try {
+////            Product a = new Product(new Provider(), 3);
+////            textArea1.setText(a.name);
+//
+//            Product m = new Live(new Provider(), 3);
+//            textPane1.setText(m.name);
+//            textPane2.setText(m.desc);
+//            ImageIcon icon=new ImageIcon(m.image);
+//            //JFrame frame=new JFrame();
+//            imagexd.setLayout(new FlowLayout());
+//            imagexd.setSize(600,900);
+//            JLabel lbl=new JLabel();
+//            lbl.setIcon(icon);
+//            imagexd.add(lbl);
+//            imagexd.setVisible(true);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         //dispose();
+        s.addProvider();
+        textPane1.setText(String.format("%d", s.getUsersNo()));
+        textPane2.setText(String.format("%d", s.getProductsNo()));
+
     }
 
     public static void main(String[] args) {

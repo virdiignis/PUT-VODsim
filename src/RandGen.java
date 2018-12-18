@@ -12,11 +12,16 @@ class RandGen {
     private static final Random rand = new Random();
 
     static int randInt(int start, int end) {
+        if (end < start) return 0;
         return start + rand.nextInt(end);
     }
 
     static long randLong(long start, long end) {
         return start + Math.round(rand.nextFloat() * (end - start));
+    }
+
+    static long randLong() {
+        return rand.nextLong();
     }
 
     static boolean randBool() {
@@ -28,10 +33,7 @@ class RandGen {
     }
 
     static Date randDate() {
-        var gc = GregorianCalendar.getInstance();
-        gc.set(Calendar.YEAR, RandGen.randInt(1900, 2015));
-        gc.set(Calendar.DAY_OF_YEAR, RandGen.randInt(1, gc.getActualMaximum(Calendar.DAY_OF_YEAR)));
-        return gc.getTime();
+        return new Date(randLong(0, new Date().getTime()));
     }
 
     static String randWord(String filename) {
@@ -48,8 +50,20 @@ class RandGen {
         }
     }
 
+    static String randPhrase() {
+        JsonObject jsonObject;
+        try {
+            jsonObject = NetIO.getJsonFromURL("http://corporatebs-generator.sameerkumar.website/");
+        } catch (IOException e) {
+            System.err.println("Couldn't retrieve genius title for Live :/\n We'll go with this classic one.");
+            e.printStackTrace();
+            return "Winter is coming.";
+        }
+        return jsonObject.get("phrase").getAsString();
+    }
+
     static String randQuote() {
-        try (InputStream is = new URL("https://ron-swanson-quotes.herokuapp.com/v2/quotes").openStream()) {
+        try (InputStream is = new URL("http://ron-swanson-quotes.herokuapp.com/v2/quotes").openStream()) {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             StringBuilder b = new StringBuilder();
             b.append(rd.readLine());
@@ -75,6 +89,9 @@ class RandGen {
         } catch (IOException e) {
             e.printStackTrace();
             return "";
+        } catch (NullPointerException e) {
+            System.err.println("Ow, cannot retrieve random name! Guess I'll just have to name all of 'em the same...");
+            return "Oh Boi Jr.";
         }
     }
 

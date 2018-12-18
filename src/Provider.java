@@ -23,7 +23,7 @@ public class Provider extends Thread {
 
     Provider() {
         products = new LinkedList<>();
-        uid = RandGen.randLong(0, Long.MAX_VALUE);
+        uid = RandGen.randLong();
         ppv = RandGen.randBool();
         if (ppv) basePrice = RandGen.randFloat(2, 10);
         else basePrice = RandGen.randFloat(500, 4000);
@@ -32,7 +32,7 @@ public class Provider extends Thread {
     @Override
     public void run() {
         while (true){
-            if (RandGen.randInt(0, 100) == 0){
+            if (RandGen.randInt(0, 5) == 1) {
                 newProduct();
                 if(!ppv) renegotiate();
             }
@@ -69,7 +69,7 @@ public class Provider extends Thread {
     }
 
     private Product createNewProduct(){
-        int choice = RandGen.randInt(0, 2);
+        int choice = RandGen.randInt(0, 3);
         if (choice == 0) return createNewMovie();
         if (choice == 1) return createNewLive();
         return createNewSeries();

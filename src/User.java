@@ -21,7 +21,7 @@ public class User extends Thread {
         debt = 0;
         birthday = RandGen.randDate();
         email = String.format("%s@gmail.com", RandGen.randName().replaceAll("\\s", "."));
-        creditCard = String.format("%d %d %d %d %d", RandGen.randInt(0, 9999), RandGen.randInt(0, 9999), RandGen.randInt(0, 9999), RandGen.randInt(0, 9999), RandGen.randInt(0, 9999));
+        creditCard = String.format("%d %d %d %d %d", RandGen.randInt(1000, 9999), RandGen.randInt(1000, 9999), RandGen.randInt(1000, 9999), RandGen.randInt(1000, 9999), RandGen.randInt(1000, 9999));
         uid = RandGen.randLong(0, Long.MAX_VALUE);
         if (RandGen.randBool()) {
             int abo = RandGen.randInt(0, 2);
@@ -45,6 +45,6 @@ public class User extends Thread {
 
     @Override
     public void run() {
-
+        //TODO todo
     }
 }
