@@ -1,5 +1,7 @@
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 class Product {
@@ -12,6 +14,10 @@ class Product {
     float price, grade;
     private AtomicInteger views;
 
+    @Override
+    public String toString() {
+        return name;
+    }
 
     Product(Provider provider, float price) {
         this.provider = provider;

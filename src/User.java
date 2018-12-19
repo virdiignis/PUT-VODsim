@@ -1,6 +1,7 @@
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.ReadWriteLock;
 
 
 /**
@@ -14,8 +15,10 @@ public class User extends Thread {
     private float debt;
     Semaphore debtSemaphore;
     private LinkedList<Product> avaliableProducts;
+    private ReadWriteLock productsLock;
 
-    User(LinkedList<Product> avaliableProducts) {
+    User(LinkedList<Product> avaliableProducts, ReadWriteLock productsLock) {
+        this.productsLock = productsLock;
         debtSemaphore = new Semaphore(1);
         this.avaliableProducts = avaliableProducts;
         debt = 0;

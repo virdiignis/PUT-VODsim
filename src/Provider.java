@@ -1,5 +1,6 @@
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.locks.ReadWriteLock;
 
 /**
  * Class representing content provider for VOD system. Each provider has it's own thread, and generates content for the system.
@@ -20,8 +21,10 @@ public class Provider extends Thread {
     private float basePrice;
 
     private List<Product> products;
+    private ReadWriteLock productsLock;
 
-    Provider() {
+    Provider(ReadWriteLock productsLock) {
+        this.productsLock = productsLock;
         products = new LinkedList<>();
         uid = RandGen.randLong();
         ppv = RandGen.randBool();
@@ -76,7 +79,9 @@ public class Provider extends Thread {
     }
 
     private synchronized void newProduct(){
+        productsLock.readLock().tryLock();
         products.add(createNewProduct());
+        productsLock.readLock().unlock();
     }
 
     public synchronized List<Product> getProducts() {

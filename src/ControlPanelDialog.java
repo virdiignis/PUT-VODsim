@@ -1,15 +1,12 @@
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
 
-public class ControlPanelDialog extends JDialog {
+public class ControlPanelDialog extends JDialog implements Runnable {
     private JPanel contentPane;
     private JButton buttonOK;
     private JPanel imagexd;
     private JTextPane textPane1;
-    private JTextPane textPane2;
+    private JList<Object> list1;
+    private JScrollBar scrollBar1;
     Simulation s;
 
     public ControlPanelDialog() {
@@ -17,12 +14,19 @@ public class ControlPanelDialog extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
+
+//
+//        list1.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+//        list1.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+//        contentPane.add(list1);
+////        list1.setVisibleRowCount(-1);
+//
+//        scrollBar1.add(list1);
+//        listScroller.setPreferredSize(new Dimension(250, 80));
+
         buttonOK.addActionListener(e -> onOK());
         s = new Simulation();
-        s.start();
-    }
-    private static int randInt(int start, int end) {
-        return start + (int)Math.round(Math.random() * (end - start));
+
     }
 
     private void onOK() {
@@ -47,15 +51,22 @@ public class ControlPanelDialog extends JDialog {
 //        }
         //dispose();
         s.addProvider();
-        textPane1.setText(String.format("%d", s.getUsersNo()));
-        textPane2.setText(String.format("%d", s.getProductsNo()));
+
 
     }
 
-    public static void main(String[] args) {
-        ControlPanelDialog dialog = new ControlPanelDialog();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
+    @Override
+    public void run() {
+        s.start();
+
+        while (true) {
+            textPane1.setText(String.format("%d", s.getUsersNo()));
+            list1.setListData(s.getProducts().toArray());
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
