@@ -4,9 +4,15 @@ public class Main {
         dialog.pack();
         Thread t = new Thread(dialog);
         t.start();
+        while (true) {
+            dialog.update();
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
-        dialog.setVisible(true);
-
-        System.exit(0);
+//        System.exit(0);
     }
 }

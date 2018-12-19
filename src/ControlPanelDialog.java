@@ -58,15 +58,11 @@ public class ControlPanelDialog extends JDialog implements Runnable {
     @Override
     public void run() {
         s.start();
+        setVisible(true);
+    }
 
-        while (true) {
-            textPane1.setText(String.format("%d", s.getUsersNo()));
-            list1.setListData(s.getProducts().toArray());
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+    public void update() {
+        textPane1.setText(String.format("%d", s.getUsersNo()));
+        list1.setListData(s.getProducts().toArray());
     }
 }
