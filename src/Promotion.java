@@ -1,8 +1,9 @@
 import java.util.Date;
 
-public class Promotion {
-    private Date start, end;
-    private int discount; // 5% to 50%
+class Promotion {
+    private final Date start;
+    private final Date end;
+    private final int discount; // 5% to 50%
 
     public Promotion(Date start, Date end, int discount) {
         this.start = start;

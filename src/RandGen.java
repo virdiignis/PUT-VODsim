@@ -3,17 +3,19 @@ import com.google.gson.JsonObject;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Random;
+import java.util.Stack;
 
 class RandGen {
-    private static final Random rand = new Random();
+    private static final Random rand = new Random(232423);
+
+    private static final Stack<String> names = new Stack<>();
+    private static final Stack<Integer> ids = new Stack<>();
 
     static int randInt(int start, int end) {
-        if (end < start) return 0;
-        return start + rand.nextInt(end);
+        if (end <= start) return 0;
+        return start + rand.nextInt(end - start);
     }
 
     static long randLong(long start, long end) {
@@ -29,23 +31,23 @@ class RandGen {
     }
 
     static float randFloat(float start, float end) {
-        return start + rand.nextFloat() * (end - start);
+        return start + rand.nextFloat() % (end - start);
     }
 
     static Date randDate() {
         return new Date(randLong(0, new Date().getTime()));
     }
 
-    static String randWord(String filename) {
+    static String randWord() {
         try {
-            RandomAccessFile file = new RandomAccessFile(filename, "r");
+            RandomAccessFile file = new RandomAccessFile("/home/prance/IntellijProjects/VODsim/src/countries.txt", "r");
             file.seek(randLong(0, file.length()));
             file.readLine();
             String ret = file.readLine();
             file.close();
             return ret;
         } catch (IOException e) {
-            System.out.println(filename + " cannot be opened or read.");
+            System.out.println("/home/prance/IntellijProjects/VODsim/src/countries.txt" + " cannot be opened or read.");
             return "";
         }
     }
@@ -53,10 +55,9 @@ class RandGen {
     static String randPhrase() {
         JsonObject jsonObject;
         try {
-            jsonObject = NetIO.getJsonFromURL("http://corporatebs-generator.sameerkumar.website/");
+            jsonObject = NetIO.getJsonFromURL("https://corporatebs-generator.sameerkumar.website/");
         } catch (IOException e) {
             System.err.println("Couldn't retrieve genius title for Live :/\n We'll go with this classic one.");
-            e.printStackTrace();
             return "Winter is coming.";
         }
         return jsonObject.get("phrase").getAsString();
@@ -76,41 +77,24 @@ class RandGen {
         }
     }
 
-    static String randName() {
-        try (InputStream is = new URL("http://randomprofile.com/api/api.php?countries=GBR&format=csv").openStream()) {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-            StringBuilder b = new StringBuilder();
-            rd.readLine();
-            String[] vals = rd.readLine().split(",");
-            b.append(vals[1]);
-            b.append(" ");
-            b.append(vals[2]);
-            return b.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "";
-        } catch (NullPointerException e) {
-            System.err.println("Ow, cannot retrieve random name! Guess I'll just have to name all of 'em the same...");
-            return "Oh Boi Jr.";
-        }
+    static String randName() throws NullPointerException {
+        if (names.isEmpty())
+            NetIO.getRandomNames(names);
+        return names.pop();
     }
 
-    static int randMovieId(){
+    static int randMovieId() {
         return randProductId("movie", 1000);
     }
 
-    static int randSeriesId(){
+    static int randSeriesId() {
         return randProductId("tv", 164);
     }
 
     private static int randProductId(String type, int maxPages) {
-        try {
-            JsonObject jsonObject = NetIO.getJsonFromURL(String.format("https://api.themoviedb.org/3/discover/%s/?api_key=%s&vote_count.gte=10&sort_by=popularity.desc&page=%d", type, Constants.API_KEY, randInt(1, maxPages)));
-            return jsonObject.get("results").getAsJsonArray().get(rand.nextInt(19)).getAsJsonObject().get("id").getAsInt();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return 293660; //returns Deadpool on error. Seems like a good choice to make.
-        }
+        if (ids.isEmpty())
+            NetIO.getRandomIds(type, maxPages, ids);
+        return ids.pop();
     }
 
 }

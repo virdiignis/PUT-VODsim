@@ -28,34 +28,51 @@ public class Movie extends Product {
         Western
     }
 
-    private HashSet<String> actors, trailers;
-    private HashSet<Genre> genres;
-    private int rentTime;
-    private Promotion promotion;
+    private HashSet<String> actors;
+    private HashSet<String> trailers;
 
-    Movie(Provider provider, float price) {
+
+    Movie(Provider provider, float price) throws IOException {
         super(provider, price);
-        rentTime = RandGen.randInt(runtime, 10000);
+        int rentTime = RandGen.randInt(runtime, 10000);
         id = RandGen.randMovieId();
         MovieFromTMDB();
     }
 
-    private void MovieFromTMDB() {
+    public HashSet<String> getActors() {
+        return actors;
+    }
+
+    public HashSet<String> getTrailers() {
+        return trailers;
+    }
+
+    private HashSet<Genre> genres;
+    private Promotion promotion;
+
+    public HashSet<Genre> getGenres() {
+        return genres;
+    }
+
+    private void MovieFromTMDB() throws IOException {
         JsonObject jsonObject = null;
-        try {
             jsonObject = NetIO.getJsonFromURL(String.format("https://api.themoviedb.org/3/movie/%d?api_key=%s", id, Constants.API_KEY));
-        } catch (IOException e) {
-            e.printStackTrace();
+        name = jsonObject.get("title").getAsString();
+        try {
+            desc = jsonObject.get("overview").getAsString();
+        } catch (UnsupportedOperationException ignored) {
+        }
+        try {
+            grade = jsonObject.get("vote_average").getAsFloat();
+        } catch (UnsupportedOperationException ignored) {
+        }
+        try {
+            runtime = jsonObject.get("runtime").getAsInt();
+        } catch (UnsupportedOperationException ignored) {
         }
 
-        assert jsonObject != null;
-        name = jsonObject.get("title").getAsString();
-        desc = jsonObject.get("overview").getAsString();
-        grade = jsonObject.get("vote_average").getAsFloat();
-        runtime = jsonObject.get("runtime").getAsInt();
-
         genres = new HashSet<>();
-        for(var gen : jsonObject.get("genres").getAsJsonArray())
+        for (var gen : jsonObject.get("genres").getAsJsonArray())
             genres.add(Genre.valueOf(gen.getAsJsonObject().get("name").getAsString().replaceAll("\\s", "")));
 
         try {
@@ -63,12 +80,11 @@ public class Movie extends Product {
             productionDate = format.parse(jsonObject.get("release_date").getAsString());
         } catch (ParseException e) {
             System.err.println("Cannot parse date.");
-            e.printStackTrace();
         }
 
         try {
             image = NetIO.imageFromURL(String.format("https://image.tmdb.org/t/p/w600_and_h900_bestv2/%s", jsonObject.get("poster_path").getAsString()));
-        } catch (IOException e) {
+        } catch (IOException | UnsupportedOperationException e) {
             System.err.println("Couldn't retrieve poster image");
         }
 
@@ -101,7 +117,7 @@ public class Movie extends Product {
 
     @Override
     float getPromotionPrice() {
-        if (promotion != null) return price*(1-promotion.calculatePrice(this));
+        if (promotion != null) return price * (1 - promotion.calculatePrice(this));
         return price;
     }
 

@@ -1,4 +1,4 @@
-public class Main {
+class Main {
     public static void main(String[] args) {
         ControlPanelDialog dialog = new ControlPanelDialog();
         dialog.pack();

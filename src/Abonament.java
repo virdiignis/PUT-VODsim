@@ -18,7 +18,7 @@ class Abonament {
         }
     }
 
-    private Version version;
+    private final Version version;
 
     Abonament(int ver) {
         if(ver == 0){

@@ -5,8 +5,13 @@ public class Live extends Product {
 
     Live(Provider provider, float price) {
         super(provider, price);
-        name = RandGen.randPhrase();
-        productionPlaces.add(RandGen.randWord("/home/prance/IdeaProjects/PUT-VODsim/src/countries.txt"));
+        do try {
+            name = NetIO.getRandomQuote();
+            break;
+        } catch (IOException ignored) {
+        }
+        while (true);
+        productionPlaces.add(RandGen.randWord());
         runtime = RandGen.randInt(30, 240);
         id = RandGen.randInt(0, Integer.MAX_VALUE);
         productionDate = RandGen.randDate();
